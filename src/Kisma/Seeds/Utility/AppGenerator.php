@@ -107,6 +107,10 @@ class AppGenerator extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\F
 	 */
 	protected $_logPath;
 	/**
+	 * @var string
+	 */
+	protected $_repoPath;
+	/**
 	 * @var bool If false, no git repository will be created. You still need a repo name...
 	 */
 	protected $_initRepo = true;
@@ -423,9 +427,16 @@ class AppGenerator extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\F
 	 */
 	protected function _initializeRepo()
 	{
+		$_repoTag = Inflector::tag( $this->_repoName, true );
+
+		if ( null === $this->_repoPath )
+		{
+			$this->_repoPath = FileSystem::makePath( $this->_basePath, $_repoTag );
+		}
+
 		$_command =
 			'git init ' .
-				escapeshellarg( Inflector::tag( $this->_repoName, true ) ) . ' ' .
+				escapeshellarg( $_repoTag ) . ' ' .
 				escapeshellarg( $this->_basePath . DIRECTORY_SEPARATOR );
 
 		if ( false === exec( $_command, $_output, $_result ) || 0 != $_result )
@@ -437,7 +448,6 @@ class AppGenerator extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\F
 			);
 		}
 
-		$this->_repoPath = $this->_basePath, $_repoTag
 		echo 'Repository initialized.';
 	}
 
@@ -445,20 +455,13 @@ class AppGenerator extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\F
 	 */
 	protected function _copyBaseTemplate()
 	{
-		if ( empty( $this->_develPath ) )
-		{
-			throw new \CIS\Exceptions\ExecutionException( 'Apparently the repo was created but script failed to provide me with enough vital information. Sorry chum.' );
-		}
-
 		//	Copy base template to new path
 		$_basePath = $this->_getTemplatePath();
 
 		$_command = 'find ' .
 			escapeshellarg( $_basePath . DIRECTORY_SEPARATOR ) .
 			' -maxdepth 1 -mindepth 1 -not -name .git -exec cp -r {} ' .
-			escapeshellarg( $this->_develPath . DIRECTORY_SEPARATOR ) . ' \;';
-
-		$this->logDebug( 'Sprinkling pixie dust everywhere: ' . $_command );
+			escapeshellarg( $this->_appPath . DIRECTORY_SEPARATOR ) . ' \;';
 
 		if ( false === exec( $_command, $_output, $_result ) || 0 != $_result )
 		{
@@ -468,16 +471,10 @@ class AppGenerator extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\F
 		}
 
 		//	Make necessary directories...
-		if ( !is_dir( $this->_develPath . DIRECTORY_SEPARATOR . 'web/public/assets' ) )
+		if ( !is_dir( $this->_appPath . DIRECTORY_SEPARATOR . 'web/public/assets' ) )
 		{
 			//	Create the assets directory
-			@mkdir( $this->_develPath . DIRECTORY_SEPARATOR . 'web/public/assets', 02775, true );
-		}
-
-		//	Make the vendor symlink
-		if ( !is_link( $this->_develPath . DIRECTORY_SEPARATOR . 'web/public/vendor' ) )
-		{
-			@symlink( \CIS\CisPath::Vendor, 'vendor' );
+			@mkdir( $this->_appPath . DIRECTORY_SEPARATOR . 'web/public/assets', 02775, true );
 		}
 	}
 
@@ -486,7 +483,6 @@ class AppGenerator extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\F
 	 * @param array  $output
 	 * @param int    $result
 	 *
-	 * @throws \CIS\Exceptions\ExecutionException
 	 * @return void
 	 */
 	protected function _errorOutput( $message, $output = array(), $result = 1 )
@@ -514,7 +510,7 @@ COMMAND OUTPUT
 
 TEXT;
 
-		throw new \CIS\Exceptions\ExecutionException( $message );
+		throw new \Kisma\Seeds\Exceptions\ApplicationException( $message );
 	}
 
 	/**
@@ -526,7 +522,7 @@ TEXT;
 	 */
 	protected function _getTemplatePath( $which = 'base' )
 	{
-		return self::BaseTemplateLocation . $this->_templatePaths[$this->_appMode][$which];
+		return __DIR__ . self::BaseTemplateLocation . $this->_templatePaths[$this->_appMode][$which];
 	}
 
 	/**
