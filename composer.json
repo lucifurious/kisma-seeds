@@ -1,0 +1,42 @@
+{
+	"name":         "kisma/kisma-seeds",
+	"description":  "Kisma Library Add-ons",
+	"keywords":     [
+		"php", "php5", "rest", "mvc", "framework", "kisma"
+	],
+	"homepage":     "https://github.com/lucifurious/kisma-seeds",
+	"type":         "library",
+	"license":      "MIT",
+	"authors":      [
+		{
+			"name":  "Jerry Ablan",
+			"email": "getkisma@gmail.com"
+		}
+	],
+	"require":      {
+    },
+    "suggest":{
+		"monolog/monolog": "1.*",
+		"twig/twig":       "1.*",
+		"twig/extensions": "dev-master"
+	},
+	"repositories": [
+		{
+			"type":    "package",
+			"package": {
+				"name":        "twitter/bootstrap",
+				"description": "twitter bootstrap",
+				"version":     "dev-master",
+				"dist":        {
+					"url":  "http://twitter.github.com/bootstrap/assets/bootstrap.zip",
+					"type": "zip"
+				}
+			}
+		}
+	],
+	"autoload":     {
+		"psr-0": {
+			"Kisma":            "src/"
+		}
+	}
+}
