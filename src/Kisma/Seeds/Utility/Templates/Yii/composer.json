@@ -1,0 +1,56 @@
+{
+	"name":         "you/your-package",
+	"description":  "What does this do?",
+	"authors":      [
+		{
+			"name":  "Your Name",
+			"email": "your@email.com"
+		}
+	],
+	"repositories": [
+		{
+			"type":    "package",
+			"package": {
+				"name":     "yiisoft/yii",
+				"version":  "1.1.12",
+				"dist":     {
+					"url":  "https://github.com/yiisoft/yii/zipball/1.1.12/",
+					"type": "zip"
+				},
+				"source":   {
+					"url":       "https://github.com/yiisoft/yii/",
+					"type":      "git",
+					"reference": "tree/1.1.12/"
+				},
+				"autoload": {
+					"files": ["framework/yii.php"]
+				}
+			}
+		},
+		{
+			"type":    "package",
+			"depends": "yiisoft/yii",
+			"package": {
+				"name":         "Pogostick/ps-yii-extensions",
+				"version":      "master",
+				"vendor-alias": "pogostick",
+				"dist":         {
+					"url":  "https://github.com/Pogostick/ps-yii-extensions/zipball/master/",
+					"type": "zip"
+				},
+				"source":       {
+					"url":       "https://github.com/Pogostick/ps-yii-extensions/",
+					"type":      "git",
+					"reference": "origin/master"
+				},
+				"autoload":     {
+					"include-path": ["extensions/pogostick/"]
+				}
+			}
+		}
+	],
+	"require":      {
+		"yiisoft/yii":                 "1.1.*",
+		"Pogostick/ps-yii-extensions": "dev-master"
+	}
+}

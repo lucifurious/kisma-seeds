@@ -18,6 +18,16 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="DataTables In-Place Editing" level="application" />
+    <orderEntry type="library" name="DataTables jQuery Library" level="application" />
+    <orderEntry type="library" name="Google jQuery CDN v1.x" level="application" />
+    <orderEntry type="library" name="Google jQuery UI CDN v1.x" level="application" />
+    <orderEntry type="library" name="html5" level="application" />
+    <orderEntry type="library" name="Microsoft jQuery Validate CDN v1.8" level="application" />
+    <orderEntry type="library" name="Silverpop CIS DataTables Bootstrap Pagination" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="jquery-ui" level="application" />
   </component>
 </module>
 

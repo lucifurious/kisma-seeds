@@ -1,5 +1,6 @@
 <?php
 namespace Kisma\Seeds\Yii\Utility;
+
 use \Kisma\Core\Utility\FileSystem;
 use \Kisma\Core\Utility\Inflector;
 
@@ -483,6 +484,7 @@ class AppGenerator extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\F
 	 * @param array  $output
 	 * @param int    $result
 	 *
+	 * @throws \Kisma\Seeds\Exceptions\ApplicationException
 	 * @return void
 	 */
 	protected function _errorOutput( $message, $output = array(), $result = 1 )
@@ -561,5 +563,365 @@ TEXT;
 	//**************************************************************************
 	//* Properties
 	//**************************************************************************
+
+	/**
+	 * @param int $appMode
+	 *
+	 * @return AppGenerator
+	 */
+	public function setAppMode( $appMode )
+	{
+		$this->_appMode = $appMode;
+
+		return $this;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getAppMode()
+	{
+		return $this->_appMode;
+	}
+
+	/**
+	 * @param string $appName
+	 *
+	 * @return AppGenerator
+	 */
+	public function setAppName( $appName )
+	{
+		$this->_appName = $appName;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAppName()
+	{
+		return $this->_appName;
+	}
+
+	/**
+	 * @param string $appPath
+	 *
+	 * @return AppGenerator
+	 */
+	public function setAppPath( $appPath )
+	{
+		$this->_appPath = $appPath;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAppPath()
+	{
+		return $this->_appPath;
+	}
+
+	/**
+	 * @param string $authorEmail
+	 *
+	 * @return AppGenerator
+	 */
+	public function setAuthorEmail( $authorEmail )
+	{
+		$this->_authorEmail = $authorEmail;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAuthorEmail()
+	{
+		return $this->_authorEmail;
+	}
+
+	/**
+	 * @param string $authorName
+	 *
+	 * @return AppGenerator
+	 */
+	public function setAuthorName( $authorName )
+	{
+		$this->_authorName = $authorName;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAuthorName()
+	{
+		return $this->_authorName;
+	}
+
+	/**
+	 * @param string $basePath
+	 *
+	 * @return AppGenerator
+	 */
+	public function setBasePath( $basePath )
+	{
+		$this->_basePath = $basePath;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getBasePath()
+	{
+		return $this->_basePath;
+	}
+
+	/**
+	 * @param boolean $copyTemplate
+	 *
+	 * @return AppGenerator
+	 */
+	public function setCopyTemplate( $copyTemplate )
+	{
+		$this->_copyTemplate = $copyTemplate;
+
+		return $this;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getCopyTemplate()
+	{
+		return $this->_copyTemplate;
+	}
+
+	/**
+	 * @param string $currentUser
+	 *
+	 * @return AppGenerator
+	 */
+	public function setCurrentUser( $currentUser )
+	{
+		$this->_currentUser = $currentUser;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCurrentUser()
+	{
+		return $this->_currentUser;
+	}
+
+	/**
+	 * @param boolean $customizeTemplate
+	 *
+	 * @return AppGenerator
+	 */
+	public function setCustomizeTemplate( $customizeTemplate )
+	{
+		$this->_customizeTemplate = $customizeTemplate;
+
+		return $this;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getCustomizeTemplate()
+	{
+		return $this->_customizeTemplate;
+	}
+
+	/**
+	 * @param array $database
+	 *
+	 * @return AppGenerator
+	 */
+	public function setDatabase( $database )
+	{
+		$this->_database = $database;
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getDatabase()
+	{
+		return $this->_database;
+	}
+
+	/**
+	 * @param array $defaultPaths
+	 *
+	 * @return AppGenerator
+	 */
+	public function setDefaultPaths( $defaultPaths )
+	{
+		$this->_defaultPaths = $defaultPaths;
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getDefaultPaths()
+	{
+		return $this->_defaultPaths;
+	}
+
+	/**
+	 * @param boolean $initRepo
+	 *
+	 * @return AppGenerator
+	 */
+	public function setInitRepo( $initRepo )
+	{
+		$this->_initRepo = $initRepo;
+
+		return $this;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getInitRepo()
+	{
+		return $this->_initRepo;
+	}
+
+	/**
+	 * @param string $logPath
+	 *
+	 * @return AppGenerator
+	 */
+	public function setLogPath( $logPath )
+	{
+		$this->_logPath = $logPath;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLogPath()
+	{
+		return $this->_logPath;
+	}
+
+	/**
+	 * @param array $replacementMap
+	 *
+	 * @return AppGenerator
+	 */
+	public function setReplacementMap( $replacementMap )
+	{
+		$this->_replacementMap = $replacementMap;
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getReplacementMap()
+	{
+		return $this->_replacementMap;
+	}
+
+	/**
+	 * @param string $repoName
+	 *
+	 * @return AppGenerator
+	 */
+	public function setRepoName( $repoName )
+	{
+		$this->_repoName = $repoName;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRepoName()
+	{
+		return $this->_repoName;
+	}
+
+	/**
+	 * @param string $repoPath
+	 *
+	 * @return AppGenerator
+	 */
+	public function setRepoPath( $repoPath )
+	{
+		$this->_repoPath = $repoPath;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRepoPath()
+	{
+		return $this->_repoPath;
+	}
+
+	/**
+	 * @param array $templateConfigFiles
+	 *
+	 * @return AppGenerator
+	 */
+	public function setTemplateConfigFiles( $templateConfigFiles )
+	{
+		$this->_templateConfigFiles = $templateConfigFiles;
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTemplateConfigFiles()
+	{
+		return $this->_templateConfigFiles;
+	}
+
+	/**
+	 * @param array $templatePaths
+	 *
+	 * @return AppGenerator
+	 */
+	public function setTemplatePaths( $templatePaths )
+	{
+		$this->_templatePaths = $templatePaths;
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTemplatePaths()
+	{
+		return $this->_templatePaths;
+	}
 
 }

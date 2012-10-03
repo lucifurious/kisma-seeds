@@ -1,0 +1,58 @@
+{
+    "hash": "4b96e57e61cdb1504b97efabe202511d",
+    "packages": [
+        {
+            "name": "Pogostick/ps-yii-extensions",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Pogostick/ps-yii-extensions/",
+                "reference": "origin/master"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/Pogostick/ps-yii-extensions/zipball/master/",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library",
+            "installation-source": "source",
+            "autoload": {
+                "include-path": [
+                    "extensions/pogostick/"
+                ]
+            },
+            "time": "1336678176"
+        },
+        {
+            "name": "yiisoft/yii",
+            "version": "1.1.12",
+            "source": {
+                "type": "github",
+                "url": "https://github.com/yiisoft/yii/",
+                "reference": "tree/1.1.12/"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://github.com/yiisoft/yii/zipball/1.1.12/",
+                "reference": null,
+                "shasum": null
+            },
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "framework/"
+                ]
+            }
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "pogostick/ps-yii-extensions": 20
+    }
+}
