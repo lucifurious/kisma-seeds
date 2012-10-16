@@ -228,19 +228,32 @@ interface Server
 	/**
 	 * @var string
 	 */
-	const ErrorMessage_InvalidClient = 'invalid_client';
+	const ErrorMessage_InvalidAccessToken = 'The access token provided is invalid.';
 	/**
 	 * @var string
 	 */
-	const ErrorMessage_UnauthorizedClient = 'unauthorized_client';
+	const ErrorMessage_MalformedToken = 'Malformed token (missing "expires" or "client_id")';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InvalidToken = 'The access token was not found.';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InsufficientScope = 'The request requires different privileges than provided by the access token.';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_ExpiredToken = 'The access token provided has expired.';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InvalidMethod = 'Only one method may be used to authenticate at a time (Auth header, GET or POST).';
+
 	/**
 	 * @var string
 	 */
 	const ErrorMessage_RedirectUriMismatch = 'redirect_uri_mismatch';
-	/**
-	 * @var string
-	 */
-	const ErrorMessage_UserDenied = 'access_denied';
 	/**
 	 * @var string
 	 */
@@ -253,12 +266,4 @@ interface Server
 	 * @var string
 	 */
 	const ErrorMessage_InvalidGrant = 'invalid_grant';
-	/**
-	 * @var string
-	 */
-	const ErrorMessage_UnsupportedGrantType = 'unsupported_grant_type';
-	/**
-	 * @var string
-	 */
-	const ErrorMessage_InsufficientScope = 'invalid_scope';
 }

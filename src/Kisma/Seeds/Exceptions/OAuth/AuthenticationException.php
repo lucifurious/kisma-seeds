@@ -2,7 +2,7 @@
 /**
  * AuthenticationException.php
  */
-namespace Kisma\Seeds\Exceptions;
+namespace Kisma\Seeds\Exceptions\OAuth;
 /**
  * AuthenticationException
  * A default authentication exception
@@ -40,12 +40,32 @@ class AuthenticationException extends ServerException
 		}
 
 		//	Build header
-		$this->_header = sprintf( 'WWW-Authenticate: %s realm="%s"', ucwords( $tokenType ), $realm );
+		$this->_header = 'WWW-Authenticate: ' . ucwords( $tokenType ) . ' realm="' . $realm . '"';
 
 		foreach ( $this->_error as $_key => $_value )
 		{
 			$this->_header .= ', ' . $_key . '="' . $_value . '"';
 		}
+	}
+
+	/**
+	 * @param string $header
+	 *
+	 * @return AuthenticationException
+	 */
+	public function setHeader( $header )
+	{
+		$this->_header = $header;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getHeader()
+	{
+		return $this->_header;
 	}
 
 	//*************************************************************************

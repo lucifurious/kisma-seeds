@@ -26,7 +26,7 @@
 namespace Kisma\Seeds\Services\OAuth;
 use \Kisma\Core\Utility\Option;
 use \Kisma\Core\Utility\FilterInput;
-use \Kisma\Seeds\Exceptions as Exceptions;
+use \Kisma\Seeds\Exceptions\OAuth as Exceptions;
 
 /**
  * Server
@@ -91,10 +91,10 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 * the exception thrown and behave differently if you like (log errors, allow
 	 * public access for missing tokens, etc)
 	 *
-	 * @param $token
-	 * @param $scope A space-separated string of required scope(s), if you want to check for scope.
+	 * @param array  $token
+	 * @param string $scope A space-separated string of required scope(s), if you want to check for scope.
 	 *
-	 * @throws \Kisma\Seeds\Exceptions\AuthenticationException
+	 * @throws \Kisma\Seeds\Exceptions\OAuth\AuthenticationException
 	 * @return array
 	 */
 	public function verifyAccessToken( $token, $scope = null )
@@ -110,7 +110,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 				$_tokenType,
 				$_realm,
 				self::Error_InvalidRequest,
-				'The request is missing a required parameter; includes an unsupported parameter or parameter value; repeats the same parameter; uses more than one method for including an access token; or is otherwise malformed.',
+				self::ErrorMessage_InvalidRequest,
 				$scope
 			);
 		}
@@ -123,7 +123,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 				$_tokenType,
 				$_realm,
 				self::Error_InvalidGrant,
-				'The access token provided is invalid.',
+				self::ErrorMessage_InvalidAccessToken,
 				$scope
 			);
 		}
@@ -136,7 +136,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 				$_tokenType,
 				$_realm,
 				self::Error_InvalidGrant,
-				'Malformed token (missing "expires" or "client_id")',
+				self::ErrorMessage_MalformedToken,
 				$scope
 			);
 		}
@@ -149,7 +149,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 				$_tokenType,
 				$_realm,
 				self::Error_InvalidGrant,
-				'The access token provided has expired.',
+				self::ErrorMessage_ExpiredToken,
 				$scope
 			);
 		}
@@ -164,7 +164,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 				$_tokenType,
 				$_realm,
 				self::Error_InsufficientScope,
-				'The request requires different privileges than provided by the access token.',
+				self::ErrorMessage_InsufficientScope,
 				$scope
 			);
 		}
@@ -226,7 +226,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 				$_tokenType,
 				$_realm,
 				self::Error_InvalidRequest,
-				'Only one method may be used to authenticate at a time (Auth header, GET or POST).'
+				self::ErrorMessage_InvalidMethod
 			);
 		}
 		elseif ( $_methodsUsed == 0 )
@@ -236,7 +236,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 				$_tokenType,
 				$_realm,
 				self::Error_InvalidRequest,
-				'The access token was not found.'
+				self::ErrorMessage_InvalidToken
 			);
 		}
 
@@ -298,7 +298,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 * @param array $inputData The draft specifies that the parameters should be retrieved from POST, but you can override to whatever method you like.
 	 * @param array $authHeaders
 	 *
-	 * @throws \Kisma\Seeds\Exceptions\ServerException
+	 * @throws \Kisma\Seeds\Exceptions\OAuth\ServerException
 	 * @return void
 	 */
 	public function grantAccessToken( array $inputData = null, array $authHeaders = null )
@@ -655,7 +655,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 * @param string $userId
 	 * @param array  $parameters
 	 *
-	 * @throws \Kisma\Seeds\Exceptions\RedirectException
+	 * @throws \Kisma\Seeds\Exceptions\OAuth\RedirectException
 	 * @return array
 	 */
 	public function getAuthResult( $authorized, $userId = null, $parameters = array() )
@@ -715,9 +715,8 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 *
 	 * @param array $inputData The draft specifies that the parameters should be retrieved from GET, but you can override to whatever method you like.
 	 *
-	 * @throws \Kisma\Seeds\Exceptions\RedirectException
-	 * @throws \Kisma\Seeds\Exceptions\ServerException
-	 *
+	 * @throws \Kisma\Seeds\Exceptions\OAuth\ServerException
+	 * @throws \Kisma\Seeds\Exceptions\OAuth\RedirectException
 	 * @return mixed The authorization parameters so the authorization server can prompt
 	 *
 	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-4.1.1
@@ -880,7 +879,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 * @param array $inputData
 	 * @param array $authHeaders
 	 *
-	 * @throws \Kisma\Seeds\Exceptions\ServerException
+	 * @throws \Kisma\Seeds\Exceptions\OAuth\ServerException
 	 * @return array A list containing the client identifier and password, for example
 	 * @code
 	 *      return array(
@@ -952,7 +951,6 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 		{
 			$_token['refresh_token'] = $this->_generateAccessToken();
 
-			/** @noinspection PhpUndefinedMethodInspection */
 			$this->_storage->setRefreshToken(
 				$_token['refresh_token'],
 				$client_id,

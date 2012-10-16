@@ -2,7 +2,7 @@
 /**
  * RedirectException.php
  */
-namespace Kisma\Seeds\Exceptions;
+namespace Kisma\Seeds\Exceptions\OAuth;
 /**
  * RedirectException
  * A default redirect exception
@@ -38,6 +38,26 @@ class RedirectException extends ServerException
 		{
 			$this->_error['state'] = $state;
 		}
+	}
+
+	/**
+	 * @param string $redirectUri
+	 *
+	 * @return RedirectException
+	 */
+	public function setRedirectUri( $redirectUri )
+	{
+		$this->_redirectUri = $redirectUri;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRedirectUri()
+	{
+		return $this->_redirectUri;
 	}
 
 	//*************************************************************************

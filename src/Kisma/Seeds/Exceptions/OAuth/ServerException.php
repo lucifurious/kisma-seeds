@@ -2,13 +2,17 @@
 /**
  * ServerException.php
  */
-namespace Kisma\Seeds\Exceptions;
+namespace Kisma\Seeds\Exceptions\OAuth;
 /**
  * ServerException
  * A default server exception
  */
 class ServerException extends \Exception
 {
+	//*************************************************************************
+	//* Private Members
+	//*************************************************************************
+
 	/**
 	 * @var int
 	 */
@@ -17,6 +21,10 @@ class ServerException extends \Exception
 	 * @var array
 	 */
 	protected $_error = array();
+
+	//*************************************************************************
+	//* Public Methods
+	//*************************************************************************
 
 	/**
 	 * @param int    $httpStatus
@@ -65,6 +73,26 @@ class ServerException extends \Exception
 	public function __toString()
 	{
 		return json_encode( $this->_error );
+	}
+
+	/**
+	 * @param array $error
+	 *
+	 * @return ServerException
+	 */
+	public function setError( $error )
+	{
+		$this->_error = $error;
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getError()
+	{
+		return $this->_error;
 	}
 
 	//*************************************************************************
