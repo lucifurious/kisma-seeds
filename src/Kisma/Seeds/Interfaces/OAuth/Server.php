@@ -154,23 +154,23 @@ interface Server
 	/**
 	 * @var string
 	 */
-	const HttpFound = '302 Found';
+	const HttpFound = '302';
 	/**
 	 * @var string
 	 */
-	const HttpBadRequest = '400 Bad Request';
+	const HttpBadRequest = '400';
 	/**
 	 * @var string
 	 */
-	const HttpUnauthorized = '401 Unauthorized';
+	const HttpUnauthorized = '401';
 	/**
 	 * @var string
 	 */
-	const HttpForbidden = '403 Forbidden';
+	const HttpForbidden = '403';
 	/**
 	 * @var string
 	 */
-	const HttpUnavailable = '503 Service Unavailable';
+	const HttpUnavailable = '503';
 
 	//.........................................................................
 	//. Errors

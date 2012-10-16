@@ -32,7 +32,7 @@ class Pdo extends \Kisma\Core\Seed implements \Kisma\Seeds\Interfaces\OAuth\Gran
 	/**
 	 * @var string
 	 */
-	const SaltyGoodness = 'rW64wRUk6Ocs+5c7JwQ{69U{]MBdIH';
+	const SaltyGoodness = 'rW64wRUk6Ocs+5c7JwQ{69U{]MBdIHqmx9Wj,=C%S#cA%+?!cJMbaQ+juMjHeEx[dlSe%h%kcI';
 
 	//*************************************************************************
 	//* Members
