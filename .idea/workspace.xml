@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="66dcc9cc-fe24-4578-9ecf-47fcc61f254a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/composer.json" afterPath="$PROJECT_DIR$/composer.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/jablan.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/jablan.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/kisma-seeds.iml" afterPath="$PROJECT_DIR$/.idea/kisma-seeds.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Kisma/Seeds/Exceptions/ServerException.php" afterPath="$PROJECT_DIR$/src/Kisma/Seeds/Exceptions/ServerException.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Server.php" afterPath="$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Server.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Storage.php" afterPath="$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Storage.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Kisma/Seeds/Services/OAuth/Server.php" afterPath="$PROJECT_DIR$/src/Kisma/Seeds/Services/OAuth/Server.php" />
     </list>
     <ignored path="kisma-seeds.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -21,41 +27,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="autoload.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/autoload.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="0" selection-start="322" selection-end="322" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="composer.json" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/composer.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="64" selection-start="234" selection-end="234" vertical-scroll-proportion="0.15517241">
-              <folding>
-                <element signature="e#96#171#0" expanded="true" />
-                <element signature="e#310#383#0" expanded="true" />
-                <element signature="e#314#380#0" expanded="true" />
-                <element signature="n#!!block;n#autoload#0;n#!!top" expanded="true" />
-                <element signature="n#!!block;n#psr-0#0;n#!!block;n#autoload#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="7" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -84,6 +56,13 @@
         <option value="$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/protected/views/layouts/main.php" />
         <option value="$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/config/console.php" />
         <option value="$PROJECT_DIR$/composer.json" />
+        <option value="$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Server.php" />
+        <option value="$PROJECT_DIR$/../clones/oauth2-php/lib/OAuth2.php" />
+        <option value="$PROJECT_DIR$/../kisma/src/Kisma/Core/Utility/FilterInput.php" />
+        <option value="$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Storage.php" />
+        <option value="$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/RefreshToken.php" />
+        <option value="$PROJECT_DIR$/src/Kisma/Seeds/Services/OAuth/Server.php" />
+        <option value="$PROJECT_DIR$/src/Kisma/Seeds/Exceptions/ServerException.php" />
       </list>
     </option>
   </component>
@@ -119,6 +98,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -134,6 +114,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="oauth2-php" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -141,6 +125,24 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
@@ -155,6 +157,36 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Kisma" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
@@ -173,7 +205,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Utility" />
+              <option name="myItemId" value="Interfaces" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -181,6 +213,10 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
@@ -199,11 +235,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Utility" />
+              <option name="myItemId" value="Interfaces" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Templates" />
+              <option name="myItemId" value="OAuth" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -211,6 +247,10 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="kisma-seeds" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="kisma-seeds" />
@@ -229,128 +269,21 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Utility" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Yii" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kisma-seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kisma-seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kisma" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Utility" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Yii" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="web" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kisma-seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kisma-seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kisma" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Utility" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Yii" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="config" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kisma-seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kisma-seeds" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Kisma" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Seeds" />
+              <option name="myItemId" value="Exceptions" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="true" />
     <property name="options.lastSelected" value="web-ide.project.structure" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../projects/dreamserver" />
-    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../clones/oauth2-php" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="PublishConfig">
     <servers>
@@ -456,20 +389,20 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1600" y="0" width="1680" height="1026" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32928178" sideWeight="0.49839914" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928178" sideWeight="0.49839914" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32972974" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Regex Tester" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CSS-X-Fire" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24019608" sideWeight="0.67071825" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2432598" sideWeight="0.67071825" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -542,10 +475,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="64" selection-start="234" selection-end="234" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#0#450#1" expanded="true" />
+            <element signature="e#96#171#0" expanded="true" />
+            <element signature="e#310#383#0" expanded="true" />
+            <element signature="e#314#380#0" expanded="true" />
+            <element signature="n#!!block;n#autoload#0;n#!!top" expanded="true" />
+            <element signature="n#!!block;n#psr-0#0;n#!!block;n#autoload#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="7" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#617#679#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/autoload.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="322" selection-end="322" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="7" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="e#617#679#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -553,6 +518,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="23" column="32" selection-start="494" selection-end="494" vertical-scroll-proportion="0.0">
           <folding>
+            <element signature="e#0#450#1" expanded="true" />
             <element signature="e#96#171#0" expanded="true" />
             <element signature="e#310#383#0" expanded="true" />
             <element signature="e#314#380#0" expanded="true" />
@@ -572,7 +538,9 @@
     <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="7" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#617#679#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -580,6 +548,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="39" selection-start="38" selection-end="38" vertical-scroll-proportion="0.0">
           <folding>
+            <element signature="e#0#450#1" expanded="true" />
             <element signature="e#96#171#0" expanded="true" />
             <element signature="e#310#383#0" expanded="true" />
             <element signature="e#314#380#0" expanded="true" />
@@ -599,7 +568,9 @@
     <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="7" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#617#679#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -613,7 +584,9 @@
     <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="23" column="53" selection-start="484" selection-end="484" vertical-scroll-proportion="0.0">
-          <folding />
+          <folding>
+            <element signature="e#617#679#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -747,29 +720,254 @@
         <state line="23" column="18" selection-start="0" selection-end="1269" vertical-scroll-proportion="0.030303031" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/autoload.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="0" selection-start="322" selection-end="322" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="7" selection-start="377" selection-end="377" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="64" selection-start="234" selection-end="234" vertical-scroll-proportion="0.15517241">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
           <folding>
+            <element signature="e#0#450#1" expanded="true" />
             <element signature="e#96#171#0" expanded="true" />
             <element signature="e#310#383#0" expanded="true" />
             <element signature="e#314#380#0" expanded="true" />
             <element signature="n#!!block;n#autoload#0;n#!!top" expanded="true" />
             <element signature="n#!!block;n#psr-0#0;n#!!block;n#autoload#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Utility/Templates/Yii/web/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="7" selection-start="620" selection-end="620" vertical-scroll-proportion="0.4847397">
+          <folding>
+            <element signature="e#617#679#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/autoload.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="0" selection-start="322" selection-end="322" vertical-scroll-proportion="0.4308797">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Server.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="226" column="0" selection-start="6528" selection-end="6528" vertical-scroll-proportion="0.24584323">
+          <folding>
+            <element signature="e#6#27#0" expanded="true" />
+            <element signature="e#68#130#0" expanded="true" />
+            <element signature="e#490#511#0" expanded="true" />
+            <element signature="e#555#576#0" expanded="true" />
+            <element signature="e#624#645#0" expanded="true" />
+            <element signature="e#684#708#0" expanded="true" />
+            <element signature="e#926#991#0" expanded="true" />
+            <element signature="e#1048#1114#0" expanded="true" />
+            <element signature="e#1173#1235#0" expanded="true" />
+            <element signature="e#1287#1347#0" expanded="true" />
+            <element signature="e#1400#1487#0" expanded="true" />
+            <element signature="e#1528#1552#0" expanded="true" />
+            <element signature="e#1584#1689#0" expanded="true" />
+            <element signature="e#1747#1901#0" expanded="true" />
+            <element signature="e#2123#2229#0" expanded="true" />
+            <element signature="e#2287#2347#0" expanded="true" />
+            <element signature="e#2467#2565#0" expanded="true" />
+            <element signature="e#2611#2729#0" expanded="true" />
+            <element signature="e#2943#3007#0" expanded="true" />
+            <element signature="e#3047#3111#0" expanded="true" />
+            <element signature="e#3328#3352#0" expanded="true" />
+            <element signature="e#3403#3427#0" expanded="true" />
+            <element signature="e#3465#3489#0" expanded="true" />
+            <element signature="e#3537#3561#0" expanded="true" />
+            <element signature="e#3621#3645#0" expanded="true" />
+            <element signature="e#3695#3719#0" expanded="true" />
+            <element signature="e#3937#3961#0" expanded="true" />
+            <element signature="e#3998#4022#0" expanded="true" />
+            <element signature="e#4232#4256#0" expanded="true" />
+            <element signature="e#4290#4314#0" expanded="true" />
+            <element signature="e#4359#4383#0" expanded="true" />
+            <element signature="e#4431#4455#0" expanded="true" />
+            <element signature="e#4497#4521#0" expanded="true" />
+            <element signature="e#4743#4893#0" expanded="true" />
+            <element signature="e#4944#5011#0" expanded="true" />
+            <element signature="e#5060#5149#0" expanded="true" />
+            <element signature="e#5208#5300#0" expanded="true" />
+            <element signature="e#5362#5443#0" expanded="true" />
+            <element signature="e#5488#5586#0" expanded="true" />
+            <element signature="e#5656#5735#0" expanded="true" />
+            <element signature="e#5782#5972#0" expanded="true" />
+            <element signature="e#6019#6113#0" expanded="true" />
+            <element signature="e#6177#6275#0" expanded="true" />
+            <element signature="e#6503#6527#0" expanded="true" />
+            <element signature="e#6780#6804#0" expanded="true" />
+            <element signature="e#6860#6884#0" expanded="true" />
+            <element signature="e#6950#6974#0" expanded="true" />
+            <element signature="e#7043#7067#0" expanded="true" />
+            <element signature="e#7119#7143#0" expanded="true" />
+            <element signature="e#7220#7244#0" expanded="true" />
+            <element signature="e#7298#7322#0" expanded="true" />
+            <element signature="e#7376#7400#0" expanded="true" />
+            <element signature="e#7471#7495#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../kisma/src/Kisma/Core/Utility/Option.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="271" column="0" selection-start="5860" selection-end="5860" vertical-scroll-proportion="0.5964912">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/GrantCode.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/GrantClient.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../kisma/src/Kisma/Core/Utility/FilterInput.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="15" selection-start="1397" selection-end="1397" vertical-scroll-proportion="0.01754386">
+          <folding>
+            <element signature="e#6#32#0" expanded="true" />
+            <element signature="e#63#141#0" expanded="true" />
+            <element signature="e#509#604#0" expanded="true" />
+            <element signature="e#727#854#0" expanded="true" />
+            <element signature="e#3518#4332#0" expanded="true" />
+            <element signature="e#4529#5343#0" expanded="true" />
+            <element signature="e#5544#6358#0" expanded="true" />
+            <element signature="e#6559#7373#0" expanded="true" />
+            <element signature="e#7568#8382#0" expanded="true" />
+            <element signature="e#8585#9399#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../clones/oauth2-php/lib/OAuth2.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="916" column="4" selection-start="35719" selection-end="35719" vertical-scroll-proportion="0.33847982">
+          <folding>
+            <element signature="e#126#1209#0" expanded="true" />
+            <element signature="e#1211#1719#0" expanded="true" />
+            <element signature="e#1737#1787#0" expanded="true" />
+            <element signature="e#1818#1899#0" expanded="true" />
+            <element signature="e#1923#2061#0" expanded="true" />
+            <element signature="e#2093#2201#0" expanded="true" />
+            <element signature="e#2376#2430#0" expanded="true" />
+            <element signature="e#3288#3582#0" expanded="true" />
+            <element signature="e#3636#4172#0" expanded="true" />
+            <element signature="e#4175#4600#0" expanded="true" />
+            <element signature="e#4645#4836#0" expanded="true" />
+            <element signature="e#4883#4898#0" expanded="true" />
+            <element signature="e#4901#5448#0" expanded="true" />
+            <element signature="e#5451#5807#0" expanded="true" />
+            <element signature="e#5896#5911#0" expanded="true" />
+            <element signature="e#5914#6303#0" expanded="true" />
+            <element signature="e#6306#6350#0" expanded="true" />
+            <element signature="e#6649#6823#0" expanded="true" />
+            <element signature="e#6939#6954#0" expanded="true" />
+            <element signature="e#6957#7148#0" expanded="true" />
+            <element signature="e#7245#7309#0" expanded="true" />
+            <element signature="e#7312#7548#0" expanded="true" />
+            <element signature="e#7770#7785#0" expanded="true" />
+            <element signature="e#7788#7957#0" expanded="true" />
+            <element signature="e#7960#8327#0" expanded="true" />
+            <element signature="e#8380#8510#0" expanded="true" />
+            <element signature="e#8561#8863#0" expanded="true" />
+            <element signature="e#8924#9083#0" expanded="true" />
+            <element signature="e#9148#9495#0" expanded="true" />
+            <element signature="e#9542#9782#0" expanded="true" />
+            <element signature="e#9855#10076#0" expanded="true" />
+            <element signature="e#10125#10386#0" expanded="true" />
+            <element signature="e#10435#10592#0" expanded="true" />
+            <element signature="e#10659#11156#0" expanded="true" />
+            <element signature="e#11210#11225#0" expanded="true" />
+            <element signature="e#11228#11380#0" expanded="true" />
+            <element signature="e#11633#11695#0" expanded="true" />
+            <element signature="e#12315#12552#0" expanded="true" />
+            <element signature="e#12711#12849#0" expanded="true" />
+            <element signature="e#13017#14050#0" expanded="true" />
+            <element signature="e#15991#17089#0" expanded="true" />
+            <element signature="e#19605#19980#0" expanded="true" />
+            <element signature="e#20439#21067#0" expanded="true" />
+            <element signature="e#28213#28736#0" expanded="true" />
+            <element signature="e#29420#30320#0" expanded="true" />
+            <element signature="e#33874#34973#0" expanded="true" />
+            <element signature="e#36253#36618#0" expanded="true" />
+            <element signature="e#36808#37073#0" expanded="true" />
+            <element signature="e#37965#38408#0" expanded="true" />
+            <element signature="e#39399#39899#0" expanded="true" />
+            <element signature="e#40180#40455#0" expanded="true" />
+            <element signature="e#40869#41138#0" expanded="true" />
+            <element signature="e#41266#41834#0" expanded="true" />
+            <element signature="e#42079#42303#0" expanded="true" />
+            <element signature="e#42497#42619#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/Storage.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="52" column="21" selection-start="1770" selection-end="1770" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Interfaces/OAuth/RefreshToken.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="38" column="7" selection-start="1055" selection-end="1055" vertical-scroll-proportion="0.22807017">
+          <folding>
+            <element signature="e#1052#1733#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Exceptions/ServerException.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="0" selection-start="274" selection-end="274" vertical-scroll-proportion="0.1754386">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Exceptions/AuthenticationException.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Kisma/Seeds/Services/OAuth/Server.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="2" selection-start="640" selection-end="640" vertical-scroll-proportion="0.017814728">
+          <folding>
+            <element signature="e#1139#1733#0" expanded="true" />
+            <element signature="e#2002#2098#0" expanded="true" />
+            <element signature="e#2122#2248#0" expanded="true" />
+            <element signature="e#2458#2482#0" expanded="true" />
+            <element signature="e#2748#3742#0" expanded="true" />
+            <element signature="e#5892#6989#0" expanded="true" />
+            <element signature="e#9667#10112#0" expanded="true" />
+            <element signature="e#19961#21185#0" expanded="true" />
+            <element signature="e#21504#21674#0" expanded="true" />
+            <element signature="e#21932#22121#0" expanded="true" />
+            <element signature="e#22933#23847#0" expanded="true" />
+            <element signature="e#27662#27724#0" expanded="true" />
+            <element signature="e#28277#28628#0" expanded="true" />
+            <element signature="e#29066#29686#0" expanded="true" />
+            <element signature="e#30381#30853#0" expanded="true" />
+            <element signature="e#32044#32256#0" expanded="true" />
+            <element signature="e#32665#32870#0" expanded="true" />
+            <element signature="e#32959#33321#0" expanded="true" />
+            <element signature="e#33519#33666#0" expanded="true" />
+            <element signature="e#33905#34464#0" expanded="true" />
+            <element signature="e#34824#35060#0" expanded="true" />
           </folding>
         </state>
       </provider>

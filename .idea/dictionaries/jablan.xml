@@ -1,7 +1,11 @@
 <component name="ProjectDictionaryState">
   <dictionary name="jablan">
     <words>
+      <w>csrf</w>
       <w>igniter</w>
+      <w>superglobals</w>
+      <w>urandom</w>
+      <w>urlencoded</w>
       <w>yiisoft</w>
     </words>
   </dictionary>

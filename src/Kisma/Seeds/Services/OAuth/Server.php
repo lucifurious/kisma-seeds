@@ -1,13 +1,44 @@
 <?php
 /**
  * Server.php
+ *
+ *         OAuth 2.0 server in PHP, originally written for <a href="http://www.opendining.net/">Open Dining</a>.
+ * Supports <a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-20">IETF draft v20</a>.
+ *
+ * Source repo has sample servers implementations for
+ * <a href="http://php.net/manual/en/book.pdo.php"> PHP Data Objects</a> and
+ * <a href="http://www.mongodb.org/">MongoDB</a>. Easily adaptable to other
+ * storage engines.
+ *
+ * PHP Data Objects supports a variety of databases, including MySQL,
+ * Microsoft SQL Server, SQLite, and Oracle, so you can try out the sample
+ * to see how it all works.
+ *
+ * @author Tim Ridgely <tim.ridgely@gmail.com>
+ * @author Aaron Parecki <aaron@parecki.com>
+ * @author Edison Wong <hswong3i@pantarei-design.com>
+ * @author David Rochwerger <catch.dave@gmail.com>
+ * @author Jerry Ablan <jerryablan@gmail.com>
+ *
+ * @see    http://code.google.com/p/oauth2-php/
+ * @see    https://github.com/quizlet/oauth2-php
  */
 namespace Kisma\Seeds\Services\OAuth;
 use \Kisma\Core\Utility\Option;
+use \Kisma\Core\Utility\FilterInput;
+use \Kisma\Seeds\Exceptions as Exceptions;
 
 /**
  * Server
- * An OAuth 2.0 server
+ * Am OAuth 2.0 draft v20 server-side implementation.
+ *
+ * @TODO Add support for Message Authentication Code (MAC) token type.
+ *
+ * @author Originally written by Tim Ridgely <tim.ridgely@gmail.com>.
+ * @author Updated to draft v10 by Aaron Parecki <aaron@parecki.com>.
+ * @author Debug, coding style clean up and documented by Edison Wong <hswong3i@pantarei-design.com>.
+ * @author Refactored (including separating from raw POST/GET) and updated to draft v20 by David Rochwerger <catch.dave@gmail.com>.
+ * @author Adapted and Refactored by Jerry Ablan <jerryablan@gmail.com>
  */
 class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAuth\Server
 {
@@ -29,37 +60,19 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	//*************************************************************************
 
 	/**
-	 * Creats a server
+	 * Constructor
 	 */
-	public function __construct( Storage $storage, $config = array() )
+	public function __construct( \Kisma\Seeds\Interfaces\OAuth\Storage $storage, $options = array() )
 	{
-		$this->storage = $storage;
-
 		//	Start fresh
 		$this->_resetOptions();
+		$this->_storage = $storage;
 
-		foreach ( $config as $_key => $_value )
+		foreach ( $options as $_key => $_value )
 		{
 			$this->set( $_key, $_value );
 		}
 	}
-
-	/**
-	 * Default configuration options are specified here.
-	 */
-	protected function _resetOptions()
-	{
-		$this->set( self::ConfigAccessLifetime, self::DefaultAccessTokenLifetime );
-		$this->set( self::ConfigRefreshLifetime, self::DefaultRefreshTokenLifetime );
-		$this->set( self::ConfigAuthLifetime, self::DefaultAuthCodeLifetime );
-		$this->set( self::ConfigRealm, self::DefaultRealm );
-		$this->set( self::ConfigTokenType, self::TokenTypeBearer );
-		$this->set( self::ConfigEnforceInputRedirect, false );
-		$this->set( self::ConfigEnforceState, false );
-		$this->set( self::ConfigSupportedScopes, array() );
-	}
-
-	// Resource protecting (Section 5).
 
 	/**
 	 * Check that a valid access token has been provided.
@@ -79,9 +92,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 * public access for missing tokens, etc)
 	 *
 	 * @param $token
-	 * @param $scope
-	 * A space-separated string of required scope(s), if you want to check
-	 * for scope.
+	 * @param $scope A space-separated string of required scope(s), if you want to check for scope.
 	 *
 	 * @throws \Kisma\Seeds\Exceptions\AuthenticationException
 	 * @return array
@@ -91,23 +102,36 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 		$_tokenType = $this->get( self::ConfigTokenType );
 		$_realm = $this->get( self::ConfigRealm );
 
+		//	Is the token good?
 		if ( empty( $token ) )
 		{
-			// Access token was not provided
-			throw new \Kisma\Seeds\Exceptions\AuthenticationException( self::HttpBadRequest, $_tokenType, $_realm, self::Error_InvalidRequest, 'The request is missing a required parameter, includes an unsupported parameter or parameter value, repeats the same parameter, uses more than one method for including an access token, or is otherwise malformed.', $scope );
+			throw new Exceptions\AuthenticationException(
+				self::HttpBadRequest,
+				$_tokenType,
+				$_realm,
+				self::Error_InvalidRequest,
+				'The request is missing a required parameter; includes an unsupported parameter or parameter value; repeats the same parameter; uses more than one method for including an access token; or is otherwise malformed.',
+				$scope
+			);
 		}
 
 		//	Get the stored token data (from the implementing subclass)
 		if ( null === ( $_token = $this->_storage->getAccessToken( $token ) ) )
 		{
-			throw new \Kisma\Seeds\Exceptions\AuthenticationException(
-				self::HttpUnauthorized, $_tokenType, $_realm, self::Error_InvalidGrant, 'The access token provided is invalid.', $scope );
+			throw new Exceptions\AuthenticationException(
+				self::HttpUnauthorized,
+				$_tokenType,
+				$_realm,
+				self::Error_InvalidGrant,
+				'The access token provided is invalid.',
+				$scope
+			);
 		}
 
-		// Check we have a well formed token
+		//	Check we have a well formed token
 		if ( !isset( $token['expires'] ) || !isset( $token['client_id'] ) )
 		{
-			throw new \Kisma\Seeds\Exceptions\AuthenticationException(
+			throw new Exceptions\AuthenticationException(
 				self::HttpUnauthorized,
 				$_tokenType,
 				$_realm,
@@ -117,10 +141,10 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 			);
 		}
 
-		// Check token expiration (expires is a mandatory paramter)
+		//	Check token expiration (expires is a mandatory paramter)
 		if ( isset( $token['expires'] ) && time() > $token['expires'] )
 		{
-			throw new \Kisma\Seeds\Exceptions\AuthenticationException(
+			throw new Exceptions\AuthenticationException(
 				self::HttpUnauthorized,
 				$_tokenType,
 				$_realm,
@@ -130,15 +154,17 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 			);
 		}
 
-		// Check scope, if provided. If token doesn't have a scope, it's NULL/empty, or it's insufficient, then throw an error
-		if ( !empty( $scope ) && ( !isset( $token['scope'] ) || !$token['scope'] || !$this->checkScope( $scope, $token['scope'] ) ) )
+		//	Check scope, if provided. If token doesn't have a scope, it's NULL/empty, or it's insufficient, then throw an error
+		$_tokenScope = Option::get( $token, 'scope' );
+
+		if ( !empty( $scope ) && ( null !== $_tokenScope || !$this->_checkScope( $scope, $_tokenScope ) ) )
 		{
-			throw new \Kisma\Seeds\Exceptions\AuthenticationException(
+			throw new Exceptions\AuthenticationException(
 				self::HttpForbidden,
 				$_tokenType,
 				$_realm,
 				self::Error_InsufficientScope,
-				'The request requires higher privileges than provided by the access token.',
+				'The request requires different privileges than provided by the access token.',
 				$scope
 			);
 		}
@@ -148,8 +174,8 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 
 	/**
 	 * This is a convenience function that can be used to get the token, which can then
-	 * be passed to verifyAccessToken(). The constraints specified by the draft are
-	 * attempted to be adheared to in this method.
+	 * be passed to verifyAccessToken(). This method is an attempt at adhering to the
+	 * constraints specified by the draft.
 	 *
 	 * As per the Bearer spec (draft 8, section 2) - there are three ways for a client
 	 * to specify the bearer token, in order of preference: Authorization Header,
@@ -158,7 +184,7 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 * NB: Resource servers MUST accept tokens via the Authorization scheme
 	 * (http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-08#section-2).
 	 *
-	 * @todo Should we enforce TLS/SSL in this function?
+	 * @todo Should TLS/SSL be enforced in this function?
 	 *
 	 * @see  http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-08#section-2.1
 	 * @see  http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-08#section-2.2
@@ -172,7 +198,12 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 */
 	public function getBearerToken()
 	{
-		if ( null === ( $_headers = \Kisma\Core\Utility\FilterInput::server( 'HTTP_AUTHORIZATION' ) ) )
+		$_tokenType = $this->get( self::ConfigTokenType );
+		$_realm = $this->get( self::ConfigRealm );
+		$_postToken = FilterInput::post( self::TokenParameterName );
+		$_getToken = FilterInput::get( INPUT_GET, self::TokenParameterName );
+
+		if ( null === ( $_headers = trim( FilterInput::server( 'HTTP_AUTHORIZATION' ) ) ) )
 		{
 			if ( function_exists( 'apache_request_headers' ) )
 			{
@@ -185,357 +216,512 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 			}
 		}
 
-		$_tokenType = $this->get( self::ConfigTokenType );
-		$_realm = $this->get( self::ConfigRealm );
-
 		// Check that exactly one method was used
-		$_methodsUsed = !empty( $_headers ) + isset( $_GET[self::TokenParameterName] ) + isset( $_POST[self::TokenParameterName] );
+		$_methodsUsed = !empty( $_headers ) + isset( $_getToken ) + isset( $_postToken );
 
 		if ( $_methodsUsed > 1 )
 		{
-			throw new \Kisma\Seeds\Exceptions\AuthenticationException( self::HttpBadRequest, $_tokenType, $_realm, self::Error_InvalidRequest, 'Only one method may be used to authenticate at a time (Auth header, GET or POST).' );
+			throw new Exceptions\AuthenticationException(
+				self::HttpBadRequest,
+				$_tokenType,
+				$_realm,
+				self::Error_InvalidRequest,
+				'Only one method may be used to authenticate at a time (Auth header, GET or POST).'
+			);
 		}
 		elseif ( $_methodsUsed == 0 )
 		{
-			throw new \Kisma\Seeds\Exceptions\AuthenticationException( self::HttpBadRequest, $_tokenType, $_realm, self::Error_InvalidRequest, 'The access token was not found.' );
+			throw new Exceptions\AuthenticationException(
+				self::HttpBadRequest,
+				$_tokenType,
+				$_realm,
+				self::Error_InvalidRequest,
+				'The access token was not found.'
+			);
 		}
 
-		// HEADER: Get the access token from the header
+		//	HEADER: Get the access token from the header
 		if ( !empty( $_headers ) )
 		{
-			if ( !preg_match( '/' . self::TokenBearerHeaderName . '\s(\S+)/', $_headers, $matches ) )
+			if ( !preg_match( '/' . self::TokenBearerHeaderName . '\s(\S+)/', $_headers, $_matches ) )
 			{
-				throw new \Kisma\Seeds\Exceptions\AuthenticationException( self::HttpBadRequest, $_tokenType, $_realm, self::Error_InvalidRequest, 'Malformed auth header' );
+				throw new Exceptions\AuthenticationException(
+					self::HttpBadRequest,
+					$_tokenType,
+					$_realm,
+					self::Error_InvalidRequest,
+					'Malformed auth header'
+				);
 			}
 
-			return $matches[1];
+			return $_matches[1];
 		}
 
 		//	POST: Get the token from POST data
-		if ( null !== ( $_token = \Kisma\Core\Utility\FilterInput::post( self::TokenParameterName ) ) )
+		if ( null !== $_postToken )
 		{
 			if ( 'POST' != $_SERVER['REQUEST_METHOD'] )
 			{
-				throw new \Kisma\Seeds\Exceptions\AuthenticationException( self::HttpBadRequest, $_tokenType, $_realm, self::Error_InvalidRequest, 'When putting the token in the body, the method must be POST.' );
+				throw new Exceptions\AuthenticationException(
+					self::HttpBadRequest,
+					$_tokenType,
+					$_realm,
+					self::Error_InvalidRequest,
+					'When putting the token in the body, the method must be POST.'
+				);
 			}
 
-			// IETF specifies content-type. NB: Not all webservers populate this _SERVER variable
-			if ( isset( $_SERVER['CONTENT_TYPE'] ) && $_SERVER['CONTENT_TYPE'] != 'application/x-www-form-urlencoded' )
+			//	IETF specifies content-type. NB: Not all webservers populate this _SERVER variable
+			if ( 'application/x-www-form-urlencoded' != FilterInput::server( 'CONTENT_TYPE' ) )
 			{
-				throw new \Kisma\Seeds\Exceptions\AuthenticationException( self::HttpBadRequest, $_tokenType, $_realm, self::Error_InvalidRequest, 'The content type for POST requests must be "application/x-www-form-urlencoded"' );
+				throw new Exceptions\AuthenticationException(
+					self::HttpBadRequest,
+					$_tokenType,
+					$_realm,
+					self::Error_InvalidRequest,
+					'The content type for POST requests must be "application/x-www-form-urlencoded"'
+				);
 			}
 
-			return $_token;
+			return $_postToken;
 		}
 
-		// GET method
-		return $_GET[self::TokenParameterName];
+		//	GET method
+		return $_getToken;
 	}
-
-	/** @codeCoverageIgnoreEnd */
-
-	/**
-	 * Check if everything in required scope is contained in available scope.
-	 *
-	 * @param $required_scope
-	 * Required scope to be check with.
-	 *
-	 * @return
-	 *      TRUE if everything in required scope is contained in available scope,
-	 *      and False if it isn't.
-	 *
-	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-7
-	 *
-	 * @ingroup oauth2_section_7
-	 */
-	private function checkScope( $required_scope, $available_scope )
-	{
-		// The required scope should match or be a subset of the available scope
-		if ( !is_array( $required_scope ) )
-		{
-			$required_scope = explode( ' ', trim( $required_scope ) );
-		}
-
-		if ( !is_array( $available_scope ) )
-		{
-			$available_scope = explode( ' ', trim( $available_scope ) );
-		}
-
-		return ( count( array_diff( $required_scope, $available_scope ) ) == 0 );
-	}
-
-	// Access token granting (Section 4).
 
 	/**
 	 * Grant or deny a requested access token.
 	 * This would be called from the "/token" endpoint as defined in the spec.
 	 * Obviously, you can call your endpoint whatever you want.
 	 *
-	 * @param $inputData - The draft specifies that the parameters should be
-	 *                   retrieved from POST, but you can override to whatever method you like.
+	 * @param array $inputData The draft specifies that the parameters should be retrieved from POST, but you can override to whatever method you like.
+	 * @param array $authHeaders
 	 *
-	 * @throws OAuth2ServerException
-	 *
-	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-4
-	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-21#section-10.6
-	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-21#section-4.1.3
-	 *
-	 * @ingroup oauth2_section_4
+	 * @throws \Kisma\Seeds\Exceptions\ServerException
+	 * @return void
 	 */
 	public function grantAccessToken( array $inputData = null, array $authHeaders = null )
 	{
-		$filters = array(
-			"grant_type"    => array(
-				"filter"  => FILTER_VALIDATE_REGEXP,
-				"options" => array( "regexp" => self::GRANT_TYPE_REGEXP ),
-				"flags"   => FILTER_REQUIRE_SCALAR
+		$_filters = array(
+			'grant_type'    => array(
+				'filter'  => FILTER_VALIDATE_REGEXP,
+				'options' => array( 'regexp' => self::RegExpFilter_GrantType ),
+				'flags'   => FILTER_REQUIRE_SCALAR
 			),
-			"scope"         => array( "flags" => FILTER_REQUIRE_SCALAR ),
-			"code"          => array( "flags" => FILTER_REQUIRE_SCALAR ),
-			"redirect_uri"  => array( "filter" => FILTER_SANITIZE_URL ),
-			"username"      => array( "flags" => FILTER_REQUIRE_SCALAR ),
-			"password"      => array( "flags" => FILTER_REQUIRE_SCALAR ),
-			"refresh_token" => array( "flags" => FILTER_REQUIRE_SCALAR ),
+			'scope'         => array( 'flags' => FILTER_REQUIRE_SCALAR ),
+			'code'          => array( 'flags' => FILTER_REQUIRE_SCALAR ),
+			'redirect_uri'  => array( 'filter' => FILTER_SANITIZE_URL ),
+			'username'      => array( 'flags' => FILTER_REQUIRE_SCALAR ),
+			'password'      => array( 'flags' => FILTER_REQUIRE_SCALAR ),
+			'refresh_token' => array( 'flags' => FILTER_REQUIRE_SCALAR ),
 		);
 
-		// Input data by default can be either POST or GET
-		if ( !isset( $inputData ) )
+		//	Input data by default can be either POST or GET
+		if ( null !== $inputData )
 		{
-			$inputData = ( $_SERVER['REQUEST_METHOD'] == 'POST' ) ? $_POST : $_GET;
+			$inputData = ( 'POST' == $_SERVER['REQUEST_METHOD'] ? $_POST : $_GET );
 		}
 
-		// Basic authorization header
-		$authHeaders = isset( $authHeaders ) ? $authHeaders : $this->getAuthorizationHeader();
-
-		// Filter input data
-		$input = filter_var_array( $inputData, $filters );
-
-		// Grant Type must be specified.
-		if ( !$input["grant_type"] )
+		//	Basic authorization header
+		if ( null === $authHeaders )
 		{
-			throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidRequest, 'Invalid grant_type parameter or parameter missing' );
+			$authHeaders = $this->_getAuthorizationHeader();
 		}
 
-		// Authorize the client
-		$client = $this->getClientCredentials( $inputData, $authHeaders );
+		//	Filter input data
+		$_input = filter_var_array( $inputData, $_filters );
 
-		if ( $this->storage->checkClientCredentials( $client[0], $client[1] ) === false )
+		//	Grant Type must be specified.
+		if ( null === ( $_grantType = Option::get( $_input, 'grant_type' ) ) )
 		{
-			throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidClient, 'The client credentials are invalid' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_InvalidRequest,
+				'Invalid grant_type parameter or parameter missing'
+			);
 		}
 
-		if ( !$this->storage->checkRestrictedGrantType( $client[0], $input["grant_type"] ) )
+		//	Authorize the client
+		$_client = $this->_getClientCredentials( $inputData, $authHeaders );
+
+		if ( false === $this->_storage->checkClientCredentials( $_client[0], $_client[1] ) )
 		{
-			throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_UNAUTHORIZED_CLIENT, 'The grant type is unauthorized for this client_id' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_InvalidClient,
+				'The client credentials are invalid'
+			);
 		}
 
-		// Do the granting
-		switch ( $input["grant_type"] )
+		if ( !$this->_storage->checkRestrictedGrantType( $_client[0], $_grantType ) )
 		{
-			case self::GRANT_TYPE_AUTH_CODE:
-				if ( !( $this->storage instanceof IOAuth2GrantCode ) )
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_UnauthorizedClient,
+				'The grant type is unauthorized for this client_id'
+			);
+		}
+
+		//	Do the granting
+		switch ( $_grantType )
+		{
+			//.........................................................................
+			//. Code
+			//.........................................................................
+
+			case self::GrantTypeAuthCode:
+				if ( !( $this->_storage instanceof \Kisma\Seeds\Interfaces\OAuth\GrantCode ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_UNSUPPORTED_GRANT_TYPE );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_UnsupportedGrantType
+					);
 				}
 
-				if ( !$input["code"] )
+				if ( null === ( $_code = Option::get( $_input, 'code' ) ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidRequest, 'Missing parameter. "code" is required' );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidRequest,
+						'Missing parameter: "code" is required'
+					);
 				}
 
-				if ( $this->get( self::Config_ENFORCE_INPUT_REDIRECT ) && !$input["redirect_uri"] )
+				if ( $this->get( self::ConfigEnforceInputRedirect ) && null === ( $_redirectUri = Option::get( $_input, 'redirect_uri' ) ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidRequest, "The redirect URI parameter is required." );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidRequest,
+						'The redirect URI parameter is required.'
+					);
 				}
 
-				$stored = $this->storage->getAuthCode( $input["code"] );
-
-				// Check the code exists
-				if ( $stored === null || $client[0] != $stored["client_id"] )
+				//	Check the code exists
+				/** @noinspection PhpUndefinedMethodInspection */
+				if ( null === ( $_stored = $this->_storage->getAuthCode( $_code ) ) || $_client[0] != Option::get( $_stored, 'client_id' ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_INVALID_GRANT, "Refresh token doesn't exist or is invalid for the client" );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidGrant,
+						'Refresh token doesn\'t exist or is invalid for the client'
+					);
 				}
 
-				// Validate the redirect URI. If a redirect URI has been provided on input, it must be validated
-				if ( $input["redirect_uri"] && !$this->validateRedirectUri( $input["redirect_uri"], $stored["redirect_uri"] ) )
+				//	Validate the redirect URI. If a redirect URI has been provided on input, it must be validated
+				$_redirectUri = Option::get( $_input, 'redirect_uri' );
+
+				if ( null !== $_redirectUri && !$this->_validateRedirectUri( $_redirectUri, Option::get( $_stored, 'redirect_uri' ) ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_REDIRECT_URI_MISMATCH, "The redirect URI is missing or do not match" );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_RedirectUriMismatch,
+						'The redirect URI is missing or do not match'
+					);
 				}
 
-				if ( $stored["expires"] < time() )
+				if ( Option::get( $_stored, 'expires' ) < time() )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_INVALID_GRANT, "The authorization code has expired" );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidGrant,
+						'The authorization code has expired'
+					);
 				}
 				break;
 
-			case self::GRANT_TYPE_USER_CREDENTIALS:
-				if ( !( $this->storage instanceof IOAuth2GrantUser ) )
+			//.........................................................................
+			//. User Credentials
+			//.........................................................................
+
+			case self::GrantTypeUserCredentials:
+				if ( !( $this->_storage instanceof \Kisma\Seeds\Interfaces\OAuth\GrantUser ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_UNSUPPORTED_GRANT_TYPE );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_UnsupportedGrantType
+					);
 				}
 
-				if ( !$input["username"] || !$input["password"] )
+				if ( null === ( $_userName = Option::get( $_input, 'username' ) ) || null === ( $_password = Option::get( $_input, 'password' ) ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidRequest, 'Missing parameters. "username" and "password" required' );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidRequest,
+						'Missing parameters: "username" and "password" required'
+					);
 				}
 
-				$stored = $this->storage->checkUserCredentials( $client[0], $input["username"], $input["password"] );
-
-				if ( $stored === false )
+				/** @noinspection PhpUndefinedMethodInspection */
+				if ( false === ( $_stored = $this->_storage->checkUserCredentials( $_client[0], $_userName, $_password ) ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_INVALID_GRANT );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidGrant
+					);
 				}
 				break;
 
-			case self::GRANT_TYPE_CLIENT_CREDENTIALS:
-				if ( !( $this->storage instanceof IOAuth2GrantClient ) )
+			//.........................................................................
+			//. Client Credentials
+			//.........................................................................
+
+			case self::GrantTypeClientCredentials:
+				if ( !( $this->_storage instanceof \DreamFactory\Interfaces\OAuth\GrantClient ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_UNSUPPORTED_GRANT_TYPE );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_UnsupportedGrantType );
 				}
 
-				if ( empty( $client[1] ) )
+				if ( empty( $_client[1] ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidClient, 'The client_secret is mandatory for the "client_credentials" grant type' );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidClient,
+						'The client_secret is mandatory for the "client_credentials" grant type'
+					);
 				}
-				// NB: We don't need to check for $stored==false, because it was checked above already
-				$stored = $this->storage->checkClientCredentialsGrant( $client[0], $client[1] );
+
+				// NB: We don't need to check for $_stored == false, because it was checked above already
+				/** @noinspection PhpUndefinedMethodInspection */
+				$_stored = $this->_storage->checkClientCredentialsGrant( $_client[0], $_client[1] );
 				break;
 
-			case self::GRANT_TYPE_REFRESH_TOKEN:
-				if ( !( $this->storage instanceof IOAuth2RefreshTokens ) )
+			//.........................................................................
+			//. Refresh Token
+			//.........................................................................
+
+			case self::GrantTypeRefreshToken:
+				if ( !( $this->_storage instanceof IOAuth2RefreshTokens ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_UNSUPPORTED_GRANT_TYPE );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_UnsupportedGrantType
+					);
 				}
 
-				if ( !$input["refresh_token"] )
+				if ( null === ( $_refreshToken = Option::get( $_input, 'refresh_token' ) ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidRequest, 'No "refresh_token" parameter found' );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidRequest,
+						'Missing parameter: "refresh_token" required.'
+					);
 				}
 
-				$stored = $this->storage->getRefreshToken( $input["refresh_token"] );
+				/** @noinspection PhpUndefinedMethodInspection */
+				$_stored = $this->_storage->getRefreshToken( $_refreshToken );
 
-				if ( $stored === null || $client[0] != $stored["client_id"] )
+				if ( $_stored === null || $_client[0] != Option::get( $_input, 'client_id' ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_INVALID_GRANT, 'Invalid refresh token' );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidGrant,
+						'Invalid refresh token'
+					);
 				}
 
-				if ( $stored["expires"] < time() )
+				if ( Option::get( $_stored, 'expires' ) < time() )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_INVALID_GRANT, 'Refresh token has expired' );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidGrant,
+						'Refresh token has expired'
+					);
 				}
 
-				// store the refresh token locally so we can delete it when a new refresh token is generated
-				$this->_priorRefreshToken = $stored["refresh_token"];
+				//	Store the refresh token locally so we can delete it when a new refresh token is generated
+				$this->_priorRefreshToken = $_refreshToken;
 				break;
 
-			case self::GRANT_TYPE_IMPLICIT:
-				/* TODO: NOT YET IMPLEMENTED */
-				throw new OAuth2ServerException( '501 Not Implemented', 'This OAuth2 library is not yet complete. This functionality is not implemented yet.' );
-				if ( !( $this->storage instanceof IOAuth2GrantImplicit ) )
+			//.........................................................................
+			//. Implicit Grants
+			//.........................................................................
+
+			case self::GrantTypeImplicit:
+				if ( !( $this->_storage instanceof \Kisma\Seeds\Interfaces\OAuth\GrantImplicit ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_UNSUPPORTED_GRANT_TYPE );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_UnsupportedGrantType
+					);
 				}
 
-				break;
+				//@TODO: Implement Implicit Grant Types
+				throw new Exceptions\ServerException(
+					'501 Not Implemented',
+					'This functionality is not yet implemented.'
+				);
 
-			// Extended grant types:
-			case filter_var( $input["grant_type"], FILTER_VALIDATE_URL ):
-				if ( !( $this->storage instanceof IOAuth2GrantExtension ) )
+			//.........................................................................
+			//. Extended/Custom Grants
+			//.........................................................................
+
+			case filter_var( $_grantType, FILTER_VALIDATE_URL ):
+				if ( !( $this->_storage instanceof \Kisma\Seeds\Interfaces\OAuth\GrantExtension ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_UNSUPPORTED_GRANT_TYPE );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_UnsupportedGrantType
+					);
 				}
-				$uri = filter_var( $input["grant_type"], FILTER_VALIDATE_URL );
-				$stored = $this->storage->checkGrantExtension( $uri, $inputData, $authHeaders );
 
-				if ( $stored === false )
+				$_uri = filter_var( $_grantType, FILTER_VALIDATE_URL );
+
+				/** @noinspection PhpUndefinedMethodInspection */
+				if ( false === ( $_stored = $this->_storage->checkGrantExtension( $_uri, $inputData, $authHeaders ) ) )
 				{
-					throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_INVALID_GRANT );
+					throw new Exceptions\ServerException(
+						self::HttpBadRequest,
+						self::Error_InvalidGrant );
 				}
 				break;
 
 			default :
-				throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidRequest, 'Invalid grant_type parameter or parameter missing' );
+				throw new Exceptions\ServerException(
+					self::HttpBadRequest,
+					self::Error_InvalidRequest,
+					'Invalid grant_type parameter or parameter missing'
+				);
 		}
 
-		if ( !isset( $stored["scope"] ) )
+		$_scope = Option::get( $_input, 'scope' );
+
+		if ( null === ( $_storedScope = Option::get( $_stored, 'scope' ) ) )
 		{
-			$stored["scope"] = null;
+			$_stored['scope'] = null;
 		}
 
-		// Check scope, if provided
-		if ( $input["scope"] && ( !is_array( $stored ) || !isset( $stored["scope"] ) || !$this->checkScope( $input["scope"], $stored["scope"] ) ) )
+		//	Check scope, if provided
+		if ( $_scope && ( !is_array( $_stored ) || empty( $_storedScope ) ) || !$this->_checkScope( $_scope, $_storedScope ) )
 		{
-			throw new OAuth2ServerException( self::HttpBadRequest, self::ERROR_INVALID_SCOPE, 'An unsupported scope was requested.' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_InvalidScope,
+				'An unsupported scope was requested.'
+			);
 		}
 
-		$user_id = isset( $stored['user_id'] ) ? $stored['user_id'] : null;
-		$token = $this->createAccessToken( $client[0], $user_id, $stored['scope'] );
+		$_userId = Option::get( $_stored, 'user_id' );
+		$_token = $this->_createAccessToken( $_client[0], $_userId, $_storedScope );
 
-		// Send response
-		$this->sendJsonHeaders();
-		echo json_encode( $token );
+		//	Send response
+		if ( !headers_sent() && 'cli' != PHP_SAPI )
+		{
+			header( 'Content-Type: application/json' );
+			header( 'Cache-Control: no-store' );
+		}
+
+		echo json_encode( $_token );
+	}
+
+	//	@codeCoverageIgnoreEnd
+
+	/**
+	 * Redirect the user appropriately after approval.
+	 *
+	 * After the user has approved or denied the access request the
+	 * authorization server should call this function to redirect the user
+	 * appropriately.
+	 *
+	 * @param bool   $authorized TRUE or FALSE depending on whether the user authorized the access.* TRUE or FALSE depending on whether the user authorized the access.
+	 * @param string $user_id    Identifier of user who authorized the client
+	 * @param array  $params     An associative array as below:
+	 * - response_type: The requested response: an access token, an
+	 *                           authorization code, or both.
+	 * - client_id: The client identifier as described in Section 2.
+	 * - redirect_uri: An absolute URI to which the authorization server
+	 *                           will redirect the user-agent to when the end-user authorization
+	 *                           step is completed.
+	 * - scope: (optional) The scope of the access request expressed as a
+	 *                           list of space-delimited strings.
+	 * - state: (optional) An opaque value used by the client to maintain
+	 *                           state between the request and callback.
+	 *
+	 * @return void
+	 */
+	public function finishClientAuthorization( $authorized, $user_id = null, $params = array() )
+	{
+		list( $redirect_uri, $result ) = $this->getAuthResult( $authorized, $user_id, $params );
+
+		header( 'HTTP/1.1 ' . self::HttpFound );
+		header( 'Location: ' . $this->_buildUri( $redirect_uri, $result ) );
+		exit();
 	}
 
 	/**
-	 * Internal function used to get the client credentials from HTTP basic
-	 * auth or POST data.
+	 * @param bool   $authorized
+	 * @param string $userId
+	 * @param array  $parameters
 	 *
-	 * According to the spec (draft 20), the client_id can be provided in
-	 * the Basic Authorization header (recommended) or via GET/POST.
-	 *
-	 * @return
-	 *      A list containing the client identifier and password, for example
-	 * @code
-	 *      return array(
-	 *      CLIENT_ID,
-	 *      CLIENT_SECRET
-	 * );
-	 * @endcode
-	 *
-	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-2.4.1
-	 *
-	 * @ingroup oauth2_section_2
+	 * @throws \Kisma\Seeds\Exceptions\RedirectException
+	 * @return array
 	 */
-	protected function getClientCredentials( array $inputData, array $authHeaders )
+	public function getAuthResult( $authorized, $userId = null, $parameters = array() )
 	{
+		$_result = array();
+		$parameters = $this->getAuthorizeParams( $parameters );
+		$parameters += array( 'scope' => null, 'state' => null );
+		extract( $parameters );
 
-		// Basic Authentication is used
-		if ( !empty( $authHeaders['PHP_AUTH_USER'] ) )
+		/**
+		 * @var $state             string
+		 * @var $scope             string
+		 * @var $client_id         string
+		 * @var $redirect_uri      string
+		 * @var $response_type     string
+		 */
+
+		if ( null !== $state )
 		{
-			return array( $authHeaders['PHP_AUTH_USER'], $authHeaders['PHP_AUTH_PW'] );
+			$_result['query']['state'] = $state;
 		}
-		elseif ( empty( $inputData['client_id'] ) )
-		{ // No credentials were specified
-			throw new OAuth2ServerException( self::HttpBadRequest, self::Error_InvalidClient, 'Client id was not found in the headers or body' );
-		}
-		else
+
+		if ( false === $authorized )
 		{
-			// This method is not recommended, but is supported by specification
-			return array( $inputData['client_id'], $inputData['client_secret'] );
+			throw new Exceptions\RedirectException(
+				$redirect_uri,
+				self::Error_UserDenied,
+				'User not allowed access to this resource.',
+				$state
+			);
 		}
+
+		if ( self::ResponseTypeAuthCode == $response_type )
+		{
+			$result['query']['code'] = $this->_createAuthCode( $client_id, $userId, $redirect_uri, $scope );
+		}
+		elseif ( self::ResponseTypeAccessToken == $response_type )
+		{
+			$_result['fragment'] = $this->_createAccessToken( $client_id, $userId, $scope );
+		}
+
+		return array( $redirect_uri, $_result );
 	}
 
-	// End-user/client Authorization (Section 2 of IETF Draft).
+	//*************************************************************************
+	//* Private Methods
+	//*************************************************************************
 
 	/**
 	 * Pull the authorization request data out of the HTTP request.
-	 * - The redirect_uri is OPTIONAL as per draft 20. But your implementation can enforce it
+	 *
+	 * The redirect_uri is OPTIONAL as per draft 20. But your implementation can enforce it
 	 * by setting Config_ENFORCE_INPUT_REDIRECT to true.
-	 * - The state is OPTIONAL but recommended to enforce CSRF. Draft 21 states, however, that
-	 * CSRF protection is MANDATORY. You can enforce this by setting the Config_ENFORCE_STATE to true.
 	 *
-	 * @param $inputData - The draft specifies that the parameters should be
-	 *                   retrieved from GET, but you can override to whatever method you like.
+	 * The state is OPTIONAL but recommended to enforce CSRF. Draft 21 states, however, that
+	 * CSRF protection is MANDATORY. You can enforce this by setting the ConfigEnforceState to true.
 	 *
-	 * @return
-	 *      The authorization parameters so the authorization server can prompt
-	 *      the user for approval if valid.
+	 * @param array $inputData The draft specifies that the parameters should be retrieved from GET, but you can override to whatever method you like.
 	 *
-	 * @throws OAuth2ServerException
+	 * @throws \Kisma\Seeds\Exceptions\RedirectException
+	 * @throws \Kisma\Seeds\Exceptions\ServerException
+	 *
+	 * @return mixed The authorization parameters so the authorization server can prompt
+	 *
 	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-4.1.1
 	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-21#section-10.12
-	 *
-	 * @ingroup oauth2_section_3
 	 */
 	public function getAuthorizeParams( array $inputData = null )
 	{
@@ -551,25 +737,27 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 			'scope'         => array( 'flags' => FILTER_REQUIRE_SCALAR )
 		);
 
-		if ( null === $inputData )
-		{
-			$inputData = $_GET;
-		}
-
-		$_input = filter_var_array( $inputData, $_filters );
+		$_input = filter_var_array( $inputData = $inputData ? : $_GET, $_filters );
 		$_state = Option::get( $_input, 'state' );
 		$_scope = Option::get( $_input, 'scope' );
 
 		//	Make sure a valid client id was supplied (we can not redirect because we were unable to verify the URI)
 		if ( null === ( $_clientId = Option::get( $_input, 'client_id' ) ) )
 		{
-			throw new \Kisma\Seeds\Exceptions\ServerException( self::HttpBadRequest, self::Error_InvalidClient, 'No client id supplied' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_InvalidClient,
+				'Missing parameter: "client_id" required.'
+			);
 		}
 
 		//	Get client details
 		if ( false === ( $_clientDetails = $this->_storage->getClientDetails( $_clientId ) ) )
 		{
-			throw new \Kisma\Seeds\Exceptions\ServerException( self::HttpBadRequest, self::Error_InvalidClient, 'Client id does not exist' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_InvalidClient,
+				'Invalid client ID' );
 		}
 
 		$_clientRedirectUri = Option::get( $_clientDetails, 'redirect_uri' );
@@ -577,193 +765,154 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 		// Make sure a valid redirect_uri was supplied. If specified, it must match the stored URI.
 		if ( null === ( $_redirectUri = Option::get( $_input, 'redirect_uri', $_clientRedirectUri ) ) )
 		{
-			throw new \Kisma\Seeds\Exceptions\ServerException( self::HttpBadRequest, self::Error_RedirectUriMismatch, 'No redirect URL was supplied or stored.' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_RedirectUriMismatch,
+				'Missing parameter: "redirect_uri" required.'
+			);
 		}
 
 		if ( $this->get( self::ConfigEnforceInputRedirect ) && null === $_redirectUri )
 		{
-			throw new ServerException( self::HttpBadRequest, self::Error_RedirectUriMismatch, 'The redirect URI is mandatory and was not supplied.' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_RedirectUriMismatch,
+				'Missing parameter: "redirect_uri" required.'
+			);
 		}
 
 		//	Only need to validate if redirect_uri provided on input and stored.
-		if ( null !== $_clientRedirectUri && null !== $_redirectUri && !$this->validateRedirectUri( $_clientRedirectUri, $_clientRedirectUri ) )
+		if ( null !== $_clientRedirectUri && null !== $_redirectUri && !$this->_validateRedirectUri( $_clientRedirectUri, $_clientRedirectUri ) )
 		{
-			throw new \Kisma\Seeds\Exceptions\ServerException( self::HttpBadRequest, self::Error_RedirectUriMismatch, 'The redirect URI provided is missing or does not match' );
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_RedirectUriMismatch,
+				'The redirect URI provided is missing or does not match'
+			);
 		}
 
 		// Select the redirect URI
 		$_input['redirect_uri'] = $_redirectUri ? : $_clientRedirectUri;
 
 		// type and client_id are required
-		if ( null === ( $_responseType = Option::get( $input, 'response_type' ) ) )
+		if ( null === ( $_responseType = Option::get( $_input, 'response_type' ) ) )
 		{
-			throw new RedirectException( $_redirectUri, self::Error_InvalidRequest, 'Invalid or missing response type.', $_state );
+			throw new Exceptions\RedirectException( $_redirectUri, self::Error_InvalidRequest, 'Invalid or missing response type.', $_state );
 		}
 
 		if ( self::ResponseTypeAuthCode != $_responseType && self::ResponseTypeAccessToken != $_responseType )
 		{
-			throw new RedirectException( $_redirectUri, self::Error_UnsupportedResponseType, null, $_state );
+			throw new Exceptions\RedirectException( $_redirectUri, self::Error_UnsupportedResponseType, null, $_state );
 		}
 
 		//	Validate that the requested scope is supported
-		if ( empty( $_scope ) || !$this->checkScope( $_scope, $this->get( self::ConfigSupportedScopes ) ) )
+		if ( empty( $_scope ) || !$this->_checkScope( $_scope, $this->get( self::ConfigSupportedScopes ) ) )
 		{
-			throw new RedirectException( $_redirectUri, self::Error_InvalidScope, 'An unsupported scope was requested.', $_state );
+			throw new Exceptions\RedirectException( $_redirectUri, self::Error_InvalidScope, 'An unsupported scope was requested.', $_state );
 		}
 
 		//	Validate state parameter exists (if configured to enforce this)
 		if ( $this->get( self::ConfigEnforceState ) && empty( $_state ) )
 		{
-			throw new RedirectException( $_redirectUri, self::Error_InvalidRequest, 'The state parameter is required.' );
+			throw new Exceptions\RedirectException(
+				$_redirectUri,
+				self::Error_InvalidRequest,
+				'Missing parameter: "state" required.'
+			);
 		}
 
 		//	Return retrieved client details together with input
 		return ( $_input + $_clientDetails );
 	}
 
+	//*************************************************************************
+	//* Private Methods
+	//*************************************************************************
+
 	/**
-	 * Redirect the user appropriately after approval.
-	 *
-	 * After the user has approved or denied the access request the
-	 * authorization server should call this function to redirect the user
-	 * appropriately.
-	 *
-	 * @param $is_authorized
-	 * TRUE or FALSE depending on whether the user authorized the access.
-	 * @param $user_id
-	 * Identifier of user who authorized the client
-	 * @param $params
-	 * An associative array as below:
-	 * - response_type: The requested response: an access token, an
-	 * authorization code, or both.
-	 * - client_id: The client identifier as described in Section 2.
-	 * - redirect_uri: An absolute URI to which the authorization server
-	 * will redirect the user-agent to when the end-user authorization
-	 * step is completed.
-	 * - scope: (optional) The scope of the access request expressed as a
-	 * list of space-delimited strings.
-	 * - state: (optional) An opaque value used by the client to maintain
-	 * state between the request and callback.
-	 *
-	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-4
-	 *
-	 * @ingroup oauth2_section_4
+	 * Default configuration options are specified here.
 	 */
-	public function finishClientAuthorization( $is_authorized, $user_id = null, $params = array() )
+	protected function _resetOptions()
 	{
-		list( $redirect_uri, $result ) = $this->getAuthResult( $is_authorized, $user_id, $params );
-		$this->doRedirectUriCallback( $redirect_uri, $result );
+		$this->set( self::ConfigAccessLifetime, self::DefaultAccessTokenLifetime );
+		$this->set( self::ConfigRefreshLifetime, self::DefaultRefreshTokenLifetime );
+		$this->set( self::ConfigAuthLifetime, self::DefaultAuthCodeLifetime );
+		$this->set( self::ConfigRealm, self::DefaultRealm );
+		$this->set( self::ConfigTokenType, self::TokenTypeBearer );
+		$this->set( self::ConfigEnforceInputRedirect, false );
+		$this->set( self::ConfigEnforceState, false );
+		$this->set( self::ConfigSupportedScopes, array() );
 	}
 
 	/**
-	 * @param bool   $is_authorized
-	 * @param string $user_id
-	 * @param array  $params
+	 * Check if everything in required scope is contained in available scope.
 	 *
-	 * @throws OAuth2RedirectException
-	 * @return array
+	 * @param string $requiredScope Required scope to be check with.
+	 * @param string $availableScope
+	 *
+	 * @return bool TRUE if everything in required scope is contained in available scope,
+	 *
+	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-7
 	 */
-	public function getAuthResult( $is_authorized, $user_id = null, $params = array() )
+	private function _checkScope( $requiredScope, $availableScope )
 	{
-		$_result = array();
-		$params = $this->getAuthorizeParams( $params );
-		$params += array( 'scope' => null, 'state' => null );
-		extract( $params );
-
-		/**
-		 * @var $state         string
-		 * @var $redirect_uri  string
-		 * @var $response_type string
-		 * @var $response_type string
-		 * @var $response_type string
-		 */
-
-		if ( null !== $state )
+		// The required scope should match or be a subset of the available scope
+		if ( !is_array( $requiredScope ) )
 		{
-			$result['query']['state'] = $state;
+			$requiredScope = explode( ' ', trim( $requiredScope ) );
 		}
 
-		if ( false === $is_authorized )
+		if ( !is_array( $availableScope ) )
 		{
-			throw new RedirectException( $redirect_uri, self::Error_UserDenied, 'User not allowed access to this resource.', $state );
-		}
-		else
-		{
-			if ( self::ResponseTypeAuthCode == $response_type )
-			{
-				$result['query']['code'] = $this->createAuthCode( $client_id, $user_id, $redirect_uri, $scope );
-			}
-			elseif ( $response_type == self::RESPONSE_TYPE_ACCESS_TOKEN )
-			{
-				$result["fragment"] = $this->createAccessToken( $client_id, $user_id, $scope );
-			}
+			$availableScope = explode( ' ', trim( $availableScope ) );
 		}
 
-		return array( $redirect_uri, $result );
-	}
-
-	// Other/utility functions.
-
-	/**
-	 * Redirect the user agent.
-	 *
-	 * Handle both redirect for success or error response.
-	 *
-	 * @param $redirect_uri
-	 * An absolute URI to which the authorization server will redirect
-	 * the user-agent to when the end-user authorization step is completed.
-	 * @param $params
-	 * Parameters to be pass though buildUri().
-	 *
-	 * @ingroup oauth2_section_4
-	 */
-	private function doRedirectUriCallback( $redirect_uri, $params )
-	{
-		header( "HTTP/1.1 " . self::HTTP_FOUND );
-		header( "Location: " . $this->buildUri( $redirect_uri, $params ) );
-		exit();
+		return ( 0 == count( array_diff( $requiredScope, $availableScope ) ) );
 	}
 
 	/**
-	 * Build the absolute URI based on supplied URI and parameters.
+	 * Internal function used to get the client credentials from HTTP basic
+	 * auth or POST data.
 	 *
-	 * @param $uri
-	 * An absolute URI.
-	 * @param $params
-	 * Parameters to be append as GET.
+	 * According to the spec (draft 20), the client_id can be provided in
+	 * the Basic Authorization header (recommended) or via GET/POST.
 	 *
-	 * @return
-	 * An absolute URI with supplied parameters.
+	 * @param array $inputData
+	 * @param array $authHeaders
 	 *
-	 * @ingroup oauth2_section_4
+	 * @throws \Kisma\Seeds\Exceptions\ServerException
+	 * @return array A list containing the client identifier and password, for example
+	 * @code
+	 *      return array(
+	 *      CLIENT_ID,
+	 *      CLIENT_SECRET
+	 * );
+	 * @endcode
+	 *
+	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-2.4.1
 	 */
-	private function buildUri( $uri, $params )
+	protected function _getClientCredentials( array $inputData, array $authHeaders )
 	{
-		$parse_url = parse_url( $uri );
-
-		// Add our params to the parsed uri
-		foreach ( $params as $k => $v )
+		//	Basic Authentication is used
+		if ( !empty( $authHeaders['PHP_AUTH_USER'] ) )
 		{
-			if ( isset( $parse_url[$k] ) )
-			{
-				$parse_url[$k] .= "&" . http_build_query( $v );
-			}
-			else
-			{
-				$parse_url[$k] = http_build_query( $v );
-			}
+			return array( $authHeaders['PHP_AUTH_USER'], $authHeaders['PHP_AUTH_PW'] );
+		}
+		elseif ( empty( $inputData['client_id'] ) )
+		{
+			// No credentials were specified
+			throw new Exceptions\ServerException(
+				self::HttpBadRequest,
+				self::Error_InvalidClient,
+				'Missing parameter: "client_id" required.'
+			);
 		}
 
-		// Put humpty dumpty back together
-		return
-			( ( isset( $parse_url["scheme"] ) ) ? $parse_url["scheme"] . "://" : "" )
-			. ( ( isset( $parse_url["user"] ) ) ? $parse_url["user"]
-			. ( ( isset( $parse_url["pass"] ) ) ? ":" . $parse_url["pass"] : "" ) . "@" : "" )
-			. ( ( isset( $parse_url["host"] ) ) ? $parse_url["host"] : "" )
-			. ( ( isset( $parse_url["port"] ) ) ? ":" . $parse_url["port"] : "" )
-			. ( ( isset( $parse_url["path"] ) ) ? $parse_url["path"] : "" )
-			. ( ( isset( $parse_url["query"] ) ) ? "?" . $parse_url["query"] : "" )
-			. ( ( isset( $parse_url["fragment"] ) ) ? "#" . $parse_url["fragment"] : "" );
+		//	This method is not recommended, but is supported by specification
+		return array(
+			FilterInput::get( $inputData, 'client_id' ),
+			FilterInput::get( $inputData, 'client_secret' ),
+		);
 	}
 
 	/**
@@ -772,74 +921,56 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	 * This belongs in a separate factory, but to keep it simple, I'm just
 	 * keeping it here.
 	 *
-	 * @param $client_id
-	 * Client identifier related to the access token.
-	 * @param $scope
-	 * (optional) Scopes to be stored in space-separated string.
+	 * @param string $client_id Client identifier related to the access token.
+	 * @param string $user_id
+	 * @param string $scope     (optional) Scopes to be stored in space-separated string.
+	 *
+	 * @return array
 	 *
 	 * @see http://tools.ietf.org/html/draft-ietf-oauth-v2-20#section-5
-	 * @ingroup oauth2_section_5
 	 */
-	protected function createAccessToken( $client_id, $user_id, $scope = null )
+	protected function _createAccessToken( $client_id, $user_id, $scope = null )
 	{
 
-		$token = array(
-			"access_token" => $this->genAccessToken(),
-			"expires_in"   => $this->get( self::ConfigAccessLifetime ),
-			"token_type"   => $this->get( self::ConfigTokenType ),
-			"scope"        => $scope
+		$_token = array(
+			'access_token' => $this->_generateAccessToken(),
+			'expires_in'   => $this->get( self::ConfigAccessLifetime ),
+			'token_type'   => $this->get( self::ConfigTokenType ),
+			'scope'        => $scope
 		);
 
-		$this->storage->setAccessToken( $token["access_token"],
+		$this->_storage->setAccessToken(
+			$_token['access_token'],
 			$client_id,
 			$user_id,
 			time() + $this->get( self::ConfigAccessLifetime ),
-			$scope );
+			$scope
+		);
 
 		// Issue a refresh token also, if we support them
-		if ( $this->storage instanceof IOAuth2RefreshTokens )
+		if ( $this->_storage instanceof \Kisma\Seeds\Interfaces\OAuth\RefreshToken )
 		{
-			$token["refresh_token"] = $this->genAccessToken();
-			$this->storage->setRefreshToken( $token["refresh_token"],
+			$_token['refresh_token'] = $this->_generateAccessToken();
+
+			/** @noinspection PhpUndefinedMethodInspection */
+			$this->_storage->setRefreshToken(
+				$_token['refresh_token'],
 				$client_id,
 				$user_id,
-				time() + $this->get( self::Config_REFRESH_LIFETIME ),
-				$scope );
+				time() + $this->get( self::ConfigRefreshLifetime ),
+				$scope
+			);
 
-			// If we've granted a new refresh token, expire the old one
+			//	If we've granted a new refresh token, expire the old one
 			if ( $this->_priorRefreshToken )
 			{
-				$this->storage->unsetRefreshToken( $this->_priorRefreshToken );
+				/** @noinspection PhpUndefinedMethodInspection */
+				$this->_storage->unsetRefreshToken( $this->_priorRefreshToken );
 				unset( $this->_priorRefreshToken );
 			}
 		}
 
-		return $token;
-	}
-
-	/**
-	 * Handle the creation of auth code.
-	 *
-	 * This belongs in a separate factory, but to keep it simple, I'm just
-	 * keeping it here.
-	 *
-	 * @param $client_id
-	 * Client identifier related to the access token.
-	 * @param $redirect_uri
-	 * An absolute URI to which the authorization server will redirect the
-	 * user-agent to when the end-user authorization step is completed.
-	 * @param $scope
-	 * (optional) Scopes to be stored in space-separated string.
-	 *
-	 * @ingroup oauth2_section_4
-	 */
-	private function _createAuthCode( $client_id, $user_id, $redirect_uri, $scope = null )
-	{
-		$code = $this->_generateAuthCode();
-
-		$this->_storage->setAuthCode( $code, $client_id, $user_id, $redirect_uri, time() + $this->get( self::ConfigAuthLifetime ), $scope );
-
-		return $code;
+		return $_token;
 	}
 
 	/**
@@ -892,8 +1023,8 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	protected function _getAuthorizationHeader()
 	{
 		return array(
-			'PHP_AUTH_USER' => \Kisma\Core\Utility\FilterInput::server( 'PHP_AUTH_USER' ),
-			'PHP_AUTH_PW'   => \Kisma\Core\Utility\FilterInput::server( 'PHP_AUTH_PW' ),
+			'PHP_AUTH_USER' => FilterInput::server( 'PHP_AUTH_USER' ),
+			'PHP_AUTH_PW'   => FilterInput::server( 'PHP_AUTH_PW' ),
 		);
 	}
 
@@ -916,17 +1047,61 @@ class Server extends \Kisma\Core\SeedBag implements \Kisma\Seeds\Interfaces\OAut
 	}
 
 	/**
-	 * Send out HTTP headers for JSON.
+	 * Handle the creation of auth code.
+	 *
+	 * This belongs in a separate factory, but to keep it simple, I'm just keeping it here.
+	 *
+	 * @param string $client_id    Client identifier related to the access token.
+	 * @param string $user_id
+	 * @param string $redirect_uri An absolute URI to which the authorization server will
+	 *                             redirect the user-agent to when the end-user authorization step is completed.
+	 * @param string $scope        (optional) Scopes to be stored in space-separated string.
+	 *
+	 * @return string
 	 */
-	private function _sendJsonHeaders()
+	private function _createAuthCode( $client_id, $user_id, $redirect_uri, $scope = null )
 	{
-		if ( 'cli' === php_sapi_name() || headers_sent() )
+		/** @noinspection PhpUndefinedMethodInspection */
+		$this->_storage->setAuthCode(
+			$_authCode = $this->_generateAuthCode(),
+			$client_id,
+			$user_id,
+			$redirect_uri,
+			time() + $this->get( self::ConfigAuthLifetime ),
+			$scope
+		);
+
+		return $_authCode;
+	}
+
+	/**
+	 * Build the absolute URI based on supplied URI and parameters.
+	 *
+	 * @param string $uri    An absolute URI.
+	 * @param array  $params Parameters to be append as GET.
+	 *
+	 * @return An absolute URI with supplied parameters.
+	 */
+	private function _buildUri( $uri, $params )
+	{
+		$_parsedUrl = parse_url( $uri );
+
+		// Add our params to the parsed uri
+		foreach ( $params as $_key => $_value )
 		{
-			return;
+			$_parsedUrl[$_key] .= ( isset( $_parsedUrl[$_key] ) ? '&' : null ) . http_build_query( $_value );
 		}
 
-		header( 'Content-Type: application/json' );
-		header( 'Cache-Control: no-store' );
+		// Rebuild
+		return
+			( ( isset( $_parsedUrl['scheme'] ) ) ? $_parsedUrl['scheme'] . '://' : '' )
+			. ( ( isset( $_parsedUrl['user'] ) ) ? $_parsedUrl['user']
+			. ( ( isset( $_parsedUrl['pass'] ) ) ? ':' . $_parsedUrl['pass'] : '' ) . '@' : '' )
+			. ( ( isset( $_parsedUrl['host'] ) ) ? $_parsedUrl['host'] : '' )
+			. ( ( isset( $_parsedUrl['port'] ) ) ? ':' . $_parsedUrl['port'] : '' )
+			. ( ( isset( $_parsedUrl['path'] ) ) ? $_parsedUrl['path'] : '' )
+			. ( ( isset( $_parsedUrl['query'] ) ) ? '?' . $_parsedUrl['query'] : '' )
+			. ( ( isset( $_parsedUrl['fragment'] ) ) ? '#' . $_parsedUrl['fragment'] : '' );
 	}
 
 }

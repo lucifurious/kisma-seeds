@@ -50,11 +50,11 @@ interface Storage
 	 * Store the supplied access token values to storage.
 	 * We need to store access token data as we create and verify tokens.
 	 *
-	 * @param $oauth_token token to stored.
-	 * @param $client_id   Client identifier to be stored.
-	 * @param $user_id     User identifier to be stored.
-	 * @param $expires     Expiration to be stored.
-	 * @param $scope       (optional) Scopes to be stored in space-separated string.
+	 * @param array  $oauth_token token to stored.
+	 * @param string $client_id   Client identifier to be stored.
+	 * @param string $user_id     User identifier to be stored.
+	 * @param int    $expires     Expiration to be stored.
+	 * @param string $scope       (optional) Scopes to be stored in space-separated string.
 	 */
 	public function setAccessToken( $oauth_token, $client_id, $user_id, $expires, $scope = null );
 

@@ -216,4 +216,49 @@ interface Server
 	 * @var string The request requires higher privileges than provided by the access token.
 	 */
 	const Error_InsufficientScope = 'invalid_scope';
+
+	//.........................................................................
+	//. Error Messages
+	//.........................................................................
+
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InvalidRequest = 'The request is missing a required parameter; includes an unsupported parameter or parameter value; repeats the same parameter; uses more than one method for including an access token; or is otherwise malformed.';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InvalidClient = 'invalid_client';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_UnauthorizedClient = 'unauthorized_client';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_RedirectUriMismatch = 'redirect_uri_mismatch';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_UserDenied = 'access_denied';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_UnsupportedResponseType = 'unsupported_response_type';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InvalidScope = 'invalid_scope';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InvalidGrant = 'invalid_grant';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_UnsupportedGrantType = 'unsupported_grant_type';
+	/**
+	 * @var string
+	 */
+	const ErrorMessage_InsufficientScope = 'invalid_scope';
 }
