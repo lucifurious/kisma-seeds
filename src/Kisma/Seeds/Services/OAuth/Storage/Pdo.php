@@ -422,7 +422,7 @@ SQL;
 	 */
 	private function _hash( $client_secret, $client_id )
 	{
-		return \Kisma\Core\Utility\Hasher::hash( $client_id . $client_secret . self::SaltyGoodness, 'blowfish' );
+		return \Kisma\Core\Utility\Hasher::hash( $client_id . $client_secret . self::SaltyGoodness, 'sha512' );
 	}
 
 	/**
