@@ -249,21 +249,4 @@ interface Server
 	 * @var string
 	 */
 	const ErrorMessage_InvalidMethod = 'Only one method may be used to authenticate at a time (Auth header, GET or POST).';
-
-	/**
-	 * @var string
-	 */
-	const ErrorMessage_RedirectUriMismatch = 'redirect_uri_mismatch';
-	/**
-	 * @var string
-	 */
-	const ErrorMessage_UnsupportedResponseType = 'unsupported_response_type';
-	/**
-	 * @var string
-	 */
-	const ErrorMessage_InvalidScope = 'invalid_scope';
-	/**
-	 * @var string
-	 */
-	const ErrorMessage_InvalidGrant = 'invalid_grant';
 }

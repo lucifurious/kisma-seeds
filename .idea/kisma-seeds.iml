@@ -10,12 +10,12 @@
     <orderEntry type="module-library">
       <library name="PHP">
         <CLASSES>
+          <root url="file://$MODULE_DIR$/../kisma" />
           <root url="file:///usr/share/php" />
-          <root url="file://$MODULE_DIR$/../kisma/src" />
         </CLASSES>
         <SOURCES>
+          <root url="file://$MODULE_DIR$/../kisma" />
           <root url="file:///usr/share/php" />
-          <root url="file://$MODULE_DIR$/../kisma/src" />
         </SOURCES>
       </library>
     </orderEntry>
