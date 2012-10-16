@@ -2,11 +2,11 @@
 	"name":        "kisma/kisma-seeds",
 	"description": "Kisma Library Add-ons",
 	"keywords":    [
-		"php", "php5", "rest", "mvc", "library", "kisma"
+		"php", "php5", "rest", "mvc", "library", "kisma", "even cooler shit"
 	],
 	"homepage":    "https://github.com/lucifurious/kisma-seeds",
 	"type":        "library",
-	"license":     "MIT",
+	"license":     ["GPL", "MIT"],
 	"authors":     [
 		{
 			"name":  "Jerry Ablan",
@@ -18,8 +18,7 @@
 	},
 	"autoload":    {
 		"psr-0": {
-			"Kisma": "Kisma\\Seeds"
+			"Kisma\\Seeds": "src/"
 		}
-	},
-	"target-dir":  "Kisma/Seeds"
+	}
 }
