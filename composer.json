@@ -18,7 +18,8 @@
 	},
 	"autoload":    {
 		"psr-0": {
-			"Kisma": "src/"
+			"Kisma": "Kisma\\Seeds"
 		}
-	}
+	},
+	"target-dir":  "Kisma/Seeds"
 }
