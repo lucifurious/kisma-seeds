@@ -13,9 +13,6 @@
 			"email": "get.kisma@gmail.com"
 		}
 	],
-	"require":     {
-		"kisma/kisma": "*"
-	},
 	"autoload":    {
 		"psr-0": {
 			"Kisma\\Seeds": "src/"
